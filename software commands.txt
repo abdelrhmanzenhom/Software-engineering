@@ -12,7 +12,7 @@ Create Table Products
 
 
  Create Table Users
-(UserID number(10) primary key, UserName varchar2(500),userpassword number(20), UserMode varchar2(500), UserAccount varchar2(500), usergender varchar2(500);
+(UserID number(10) primary key, UserName varchar2(500),userpassword number(20), UserMode varchar2(500), UserAccount varchar2(500), usergender varchar2(500));
 
 
 
@@ -119,45 +119,17 @@ End ;
 
 
 
-create or replace procedure Insert_Users
-(RID number, MID varchar2,CID Number,
-DRented varchar2, UserAccount varchar2,CIaD Number)
-as
-begin
-insert into Users
-(UserID, UserName,userpassword, UserMode, UserAccount,ProductID)
-Values ( RID, MID, CID, DRented, DBack,CIaD) ;
-End ;
 
-
-
-
-create or replace procedure search_products
+create or replace
+procedure search_products
 (Price in varchar2 , CID out sys_refcursor)
 as
 begin
 open CID for
-select AuctionName,ProductSalary
+SELECT PRODUCTNAME, ProductSALARY
 from Products
-where ProductSalary > Pricce
+where ProductSalary > Price; 
 end;
-
-
-
-
-
-
-create or replace procedure search_products
-(Price in varchar2 , CID out sys_refcursor)
-as
-begin
-open CID for
-select AuctionName,ProductSalary
-from Products
-where ProductSalary > Pricce
-end;
-
-
 
 
 
@@ -173,22 +145,29 @@ end;
 
 
 
-
-
-
-
-create or replace procedure GetAuctionsrows
+create or replace
+procedure GetAuctionsrows
 (AucStatus in varchar2 , CID out sys_refcursor)
 as
 begin
 open CID for
 select AuctionName,Price
 from Auctions
-where AuctionStatus = AucStatus
+where AuctionStatus = AucStatus;
 end;
 
 
 
+create or replace
+procedure Insert_Users
+(RID number, MID varchar2,CID Number,
+DRented varchar2, UserAccount varchar2,CIaD VARCHAR2)
+as
+begin
+INSERT INTO users
+(UserID, UserName,userpassword, UserMode, UserAccount, usergender)
+Values ( RID, MID, CID, DRented, UserAccount , ciad );
+End ;
 
 
 
@@ -204,7 +183,14 @@ End ;
 
 
 
-
+create or replace procedure GetAuctionsmaxprice (namee in VARCHAR2, RID out number)
+as
+begin
+select max(price)
+into RID
+from Auctions
+where auctionname=namee;
+end;
 
 
 create or replace procedure GetAuctionsID (RID out number)

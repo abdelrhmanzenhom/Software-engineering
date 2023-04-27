@@ -9,7 +9,7 @@ using System.Windows.Forms;
 using Oracle.DataAccess.Client;
 using Oracle.DataAccess.Types;
 
-namespace ODP1_Connected_Start
+namespace version1
 {
     public partial class ActorsForm : Form
     {
@@ -27,32 +27,91 @@ namespace ODP1_Connected_Start
 
             OracleCommand cmd = new OracleCommand();
             cmd.Connection = conn;
-            cmd.CommandText = "select UserName,userpassword from Users where ActorID =:id";
+          
+            cmd.CommandText = "select UserID from USERS";
+
             cmd.CommandType = CommandType.Text;
-            cmd.Parameters.Add("id", cmb_ID.SelectedItem.ToString());
+         
             OracleDataReader dr = cmd.ExecuteReader();
             while (dr.Read())
             {
-                txt_Name.Text = dr[0].ToString();
-                txt_Gender.Text = dr[1].ToString();
+                cmb_ID.Items.Add(dr[0]);
+              //  txt_Name.Text = dr[0].ToString();
+                //txt_Gender.Text = dr[1].ToString();
             }
             dr.Close();
+
+            cmd.CommandText = "select UserMode  from USERS";
+
+            cmd.CommandType = CommandType.Text;
+
+            OracleDataReader dar = cmd.ExecuteReader();
+            while (dar.Read())
+            {
+                comboBox2.Items.Add(dar[0]);
+                //  txt_Name.Text = dr[0].ToString();
+                //txt_Gender.Text = dr[1].ToString();
+            }
+            dar.Close();
+
+            cmd.CommandText = "select AuctionStatus from Auctions";
+
+            cmd.CommandType = CommandType.Text;
+
+            OracleDataReader daar = cmd.ExecuteReader();
+            while (daar.Read())
+            {
+                comboBox5.Items.Add(daar[0]);
+                //  txt_Name.Text = dr[0].ToString();
+                //txt_Gender.Text = dr[1].ToString();
+            }
+            daar.Close();
+
+
+
 
         }
 
         private void cmb_ID_SelectedIndexChanged(object sender, EventArgs e)
         {
+            
+            
+            OracleCommand cmd = new OracleCommand();
+            cmd.Connection = conn;
+
+            cmd.CommandText = "select UserName,userpassword,UserMode,UserAccount,usergender from Users where UserID =:id";
+             cmd.Parameters.Add("id", cmb_ID.SelectedItem.ToString());
+            OracleDataReader dr = cmd.ExecuteReader();
+            while (dr.Read())
+            {
+                
+                  txt_Name.Text = dr[0].ToString();
+                txt_Gender.Text = dr[1].ToString();
+                textBox4.Text = dr[2].ToString();
+                textBox3.Text = dr[3].ToString();
+                textBox2.Text = dr[4].ToString();
+            }
+            dr.Close();
+
         }
 
         private void btn_Insert_Click(object sender, EventArgs e)
         {
             OracleCommand cmD = new OracleCommand();
             cmD.Connection = conn;
-            cmD.CommandText = "insert into USERS  values(:id,:USERNAME,:USERPASSWORD )";
-            cmD.Parameters.Add("id", cmb_ID.Text);
-            cmD.Parameters.Add("name", txt_Name.Text);
-            cmD.Parameters.Add("Password", txt_Gender.Text);
+            cmD.CommandText = "insert into Users  values (:UserID,:UserName ,:userpassword  ,:UserMode ,:UserAccount,:usergender )";
+            cmD.Parameters.Add("UserID", cmb_ID.Text.ToString());
+            cmD.Parameters.Add("UserName", txt_Name.Text);
+            cmD.Parameters.Add("userpassword", txt_Gender.Text.ToString());
+            cmD.Parameters.Add("UserMode", textBox4.Text);
+            cmD.Parameters.Add("UserAccount", textBox3.Text);
+            cmD.Parameters.Add("usergender", textBox2.Text);
             int r = cmD.ExecuteNonQuery();
+            if(r!= -1)
+            {
+                cmb_ID.Items.Add(cmb_ID.Text);
+                MessageBox.Show("Inserted Row Correctly");
+            }
 
         }
 
@@ -63,15 +122,22 @@ namespace ODP1_Connected_Start
             Cmd.Connection = conn;
             Cmd.CommandText = "GetAuctionsrows";
             Cmd.CommandType = CommandType.StoredProcedure;
-            Cmd.Parameters.Add("AucStatus", textBox1.Text);
-            Cmd.Parameters.Add("AucName", OracleDbType.RefCursor, ParameterDirection.Output);
-            OracleDataReader Dr = Cmd.ExecuteReader();
-            while (Dr.Read())
+            Cmd.Parameters.Add("AucStatus", comboBox5.SelectedItem);
+           
+
+            Cmd.Parameters.Add("AutionName", OracleDbType.RefCursor, ParameterDirection.Output);
+            //Cmd.Parameters.Add("Price",OracleDbType.RefCursor, ParameterDirection.Output);
+            comboBox6.Items.Clear();
+            comboBox7.Items.Clear();
+            OracleDataReader dr = Cmd.ExecuteReader();
+            while (dr.Read())
             {
-                textBox2.Text = Dr[0].ToString();
-                textBox3.Text = Dr[1].ToString();
+
+                comboBox6.Items.Add(dr[0].ToString());
+                comboBox7.Items.Add(dr[1].ToString());
+
             }
-            Dr.Close();
+            dr.Close();
 
         }
 
@@ -84,16 +150,102 @@ namespace ODP1_Connected_Start
         {
             OracleCommand Cmm = new OracleCommand();
             Cmm.Connection = conn;
-            Cmm.CommandText = "GetUsersID";
+            Cmm.CommandText = "GetAuctionsmaxprice";
             Cmm.CommandType = CommandType.StoredProcedure;
-            Cmm.Parameters.Add("RID", comboBox1.Text);
-           
-            OracleDataReader DR = Cmm.ExecuteReader();
-            while (DR.Read())
-            {
-                comboBox1.Items.Add (DR[0]);
+           Cmm.Parameters.Add("namee", textBox1.Text);
+            Cmm.Parameters.Add("id", OracleDbType.Int32, ParameterDirection.Output);
+            int r = Cmm.ExecuteNonQuery();
+            int var;
+            try {
+                var = Convert.ToInt32(Cmm.Parameters["id"].Value.ToString());
+
             }
-            DR.Close();
+            catch
+            {
+                var = 1;
+            }
+            textBox5.Text=var.ToString();
+
+        }
+
+        private void comboBox2_SelectedIndexChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        private void comboBox2_SelectedIndexChanged_1(object sender, EventArgs e)
+        {
+
+            OracleCommand cmd = new OracleCommand();
+            cmd.Connection = conn;
+
+            cmd.CommandText = "select UserName,UserAccount  from Users where UserMode  =:id";
+            cmd.Parameters.Add("id", comboBox2.SelectedItem.ToString());
+            comboBox3.Items.Clear();
+            comboBox4.Items.Clear();
+            OracleDataReader dr = cmd.ExecuteReader();
+            while (dr.Read())
+            {
+
+                comboBox3.Items.Add(dr[0].ToString());
+                comboBox4.Items.Add(dr[1].ToString());
+
+            }
+            dr.Close();
+
+
+        }
+       
+
+        private void label9_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void comboBox3_SelectedIndexChanged(object sender, EventArgs e)
+        {
+
+
+        }
+
+        private void textBox3_TextChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        private void comboBox7_SelectedIndexChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        private void comboBox5_SelectedIndexChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        private void comboBox1_SelectedIndexChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        private void label5_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void textBox3_TextChanged_1(object sender, EventArgs e)
+        {
+
+        }
+
+        private void label12_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void textBox1_TextChanged(object sender, EventArgs e)
+        {
+
         }
     }
 }
