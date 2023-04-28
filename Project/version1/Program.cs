@@ -15,7 +15,7 @@ namespace version1
         {
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-            Application.Run(new ActorsForm());
+            Application.Run(new Form3());
         }
     }
 }

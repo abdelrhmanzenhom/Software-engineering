@@ -23,7 +23,11 @@ namespace version1
         {
 
         }
-
+        private void Form1_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            e.Cancel = true;
+            this.Hide();
+        }
         private void report_butt_Click(object sender, EventArgs e)
         {
             CR.SetParameterValue(0, comboBox1.Text);
@@ -38,5 +42,7 @@ namespace version1
                 comboBox1.Items.Add(v.Value);
             }
         }
+
+        
     }
 }

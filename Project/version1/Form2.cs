@@ -59,6 +59,12 @@ namespace version1
             adapter.Update(dt.Tables[0]);
             MessageBox.Show("saved");
         }
+
+        private void Form2_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            e.Cancel = true;
+            this.Hide();
+        }
     }
     }
 

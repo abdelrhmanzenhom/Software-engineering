@@ -144,6 +144,8 @@ namespace version1
         private void ActorsForm_FormClosing(object sender, FormClosingEventArgs e)
         {
             conn.Dispose();
+            e.Cancel = true;
+            this.Hide();
         }
 
         private void btn_GETUSERSID_Click(object sender, EventArgs e)
