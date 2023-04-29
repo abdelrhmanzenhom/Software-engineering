@@ -44,13 +44,22 @@ namespace version1
             cmd.CommandText = "select UserMode  from USERS";
 
             cmd.CommandType = CommandType.Text;
-
+            bool flag1=false ,flag2 = false, flag3 = false;
             OracleDataReader dar = cmd.ExecuteReader();
             while (dar.Read())
             {
-                comboBox2.Items.Add(dar[0]);
-                //  txt_Name.Text = dr[0].ToString();
-                //txt_Gender.Text = dr[1].ToString();
+                
+                if (flag1 == false && dar[0].ToString() == "Admin")
+                {
+                    comboBox2.Items.Add(dar[0]); flag1 = true;
+                }
+
+                else if (flag2 == false && dar[0].ToString() == "Bidder") { comboBox2.Items.Add(dar[0]); flag2 = true; }
+                else if (flag3 == false && dar[0].ToString() == "Auctioneer") { comboBox2.Items.Add(dar[0]); flag3 = true; }
+
+
+
+                if (flag1 == true && flag2 == true&&flag3==true) break;
             }
             dar.Close();
 
@@ -59,9 +68,19 @@ namespace version1
             cmd.CommandType = CommandType.Text;
 
             OracleDataReader daar = cmd.ExecuteReader();
+            bool f1 = false;
+            bool f2 = false;
             while (daar.Read())
-            {
-                comboBox5.Items.Add(daar[0]);
+            { if (f1 == false&&daar[0].ToString()=="Finished")
+                {
+                    comboBox5.Items.Add(daar[0]); f1 = true;
+                }
+
+                else if (f2 == false&& daar[0].ToString() == "present") { comboBox5.Items.Add(daar[0]); f2 = true; }
+
+                if (f1 == true && f2 == true) break;
+                
+            
                 //  txt_Name.Text = dr[0].ToString();
                 //txt_Gender.Text = dr[1].ToString();
             }
@@ -144,6 +163,8 @@ namespace version1
         private void ActorsForm_FormClosing(object sender, FormClosingEventArgs e)
         {
             conn.Dispose();
+            e.Cancel = true;
+            this.Hide();
         }
 
         private void btn_GETUSERSID_Click(object sender, EventArgs e)
@@ -158,13 +179,14 @@ namespace version1
             int var;
             try {
                 var = Convert.ToInt32(Cmm.Parameters["id"].Value.ToString());
-
+                textBox5.Text = var.ToString();
             }
             catch
             {
-                var = 1;
+                string x = "not found";
+                textBox5.Text = x;
             }
-            textBox5.Text=var.ToString();
+           
 
         }
 
@@ -184,6 +206,8 @@ namespace version1
             comboBox3.Items.Clear();
             comboBox4.Items.Clear();
             OracleDataReader dr = cmd.ExecuteReader();
+            comboBox3.Text = "";
+            comboBox4.Text = "";
             while (dr.Read())
             {
 

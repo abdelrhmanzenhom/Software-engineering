@@ -78,7 +78,7 @@
             this.btn_GETUSERSID.Name = "btn_GETUSERSID";
             this.btn_GETUSERSID.Size = new System.Drawing.Size(138, 28);
             this.btn_GETUSERSID.TabIndex = 2;
-            this.btn_GETUSERSID.Text = "GETUSERID";
+            this.btn_GETUSERSID.Text = "search for product max price";
             this.btn_GETUSERSID.UseVisualStyleBackColor = true;
             this.btn_GETUSERSID.Click += new System.EventHandler(this.btn_GETUSERSID_Click);
             // 
@@ -366,6 +366,7 @@
             this.Controls.Add(this.btn_Insert);
             this.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.Name = "ActorsForm";
+            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Form1";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.ActorsForm_FormClosing);
             this.Load += new System.EventHandler(this.ActorsForm_Load);

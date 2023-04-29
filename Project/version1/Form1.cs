@@ -8,35 +8,47 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using CrystalDecisions.Shared;
-
 namespace version1
 {
     public partial class Form1 : Form
     {
-        CrystalReport1 CR;
+        CrystalReport1 cr;
         public Form1()
         {
             InitializeComponent();
         }
 
-        private void crystalReportViewer1_Load(object sender, EventArgs e)
+        private void Form1_FormClosing(object sender, FormClosingEventArgs e)
         {
-
-        }
-
-        private void report_butt_Click(object sender, EventArgs e)
-        {
-            CR.SetParameterValue(0, comboBox1.Text);
-            crystalReportViewer1.ReportSource = CR; 
+            e.Cancel = true;
+            this.Hide();
         }
 
         private void Form1_Load(object sender, EventArgs e)
         {
-            CR = new CrystalReport1();
-            foreach(ParameterDiscreteValue v in CR.ParameterFields[0].DefaultValues)
+            cr = new CrystalReport1();
+            foreach (ParameterDiscreteValue v in cr.ParameterFields[0].DefaultValues)
             {
                 comboBox1.Items.Add(v.Value);
             }
+
+        }
+
+        private void button1_Click(object sender, EventArgs e)
+        {
+          
+        }
+
+        private void label1_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void comboBox1_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            cr.SetParameterValue(0, comboBox1.Text);
+
+            crystalReportViewer2.ReportSource = cr;
         }
     }
 }
